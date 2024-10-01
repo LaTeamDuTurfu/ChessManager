@@ -23,8 +23,9 @@ class Interface:
         return self.ASSETS_PATH / Path(path)
 
     def deselect_button(self):
-        index = self.listbox.selected_index
-        self.listbox.deselect(index)
+        if self.listbox.selected is not None:
+            index = self.listbox.selected_index
+            self.listbox.deselect(index)
 
     def run(self):
         self.window.geometry("1024x768")
