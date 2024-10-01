@@ -5,7 +5,7 @@ import os
 class Database:
     def __init__(self):
         self.parties = []
-        self.folder_path = '../Data'
+        self.folder_path = './Data'
 
     def load_parties(self):
         for file in os.listdir(self.folder_path): # Pour parcourir tous les fichiers du dossiers

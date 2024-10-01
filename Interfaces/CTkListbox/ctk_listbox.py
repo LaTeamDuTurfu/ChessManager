@@ -19,7 +19,7 @@ class CTkListbox(customtkinter.CTkScrollableFrame):
             hover_color: str = "default",
             button_color: str = "default",
             border_width: int = 3,
-            font: tuple = None,
+            font: tuple = ("Krona One", 12, "bold"),
             multiple_selection: bool = False,
             listvariable=None,
             hover: bool = True,
@@ -36,7 +36,7 @@ class CTkListbox(customtkinter.CTkScrollableFrame):
             **kwargs,
         )
         self._scrollbar.grid_configure(padx=(0, border_width + 4))
-        self._scrollbar.configure(width=12)
+        self._scrollbar.configure(width=16)
 
         if bg_color:
             super().configure(bg_color=bg_color)
