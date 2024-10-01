@@ -12,14 +12,11 @@ from CTkListbox import *
 class Interface:
 
     def __init__(self, database):
+        self.listbox = None
         self.OUTPUT_PATH = Path(__file__).parent
         self.ASSETS_PATH = self.OUTPUT_PATH / Path(r"../Interfaces/assets/frame0/")
         self.window = Tk()
         self.custom_font = ("Krona One", 16, "bold")
-        self.listbox = CTkListbox(self.window, command=None, width=283, bg_color="#778DA9",
-                                  button_color="#778DA9",
-                                  fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B",
-                                  label_font=self.custom_font)
         self.database = database
 
     def relative_to_assets(self, path: str) -> Path:
@@ -60,8 +57,11 @@ class Interface:
             fill="#778DA9",
             outline="")
 
-        self.listbox.place(x=32, y=26)
-
+        self.listbox = CTkListbox(self.window, command=None, width=283, bg_color="#778DA9",
+                                  button_color="#778DA9",
+                                  fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B",
+                                  label_font=self.custom_font)
+        
         self.listbox.insert("end", "Game 0")
         self.listbox.insert("end", "Game 1")
         self.listbox.insert("end", "Game 2")
@@ -71,6 +71,8 @@ class Interface:
         self.listbox.insert("end", "Game 6")
         self.listbox.insert("end", "Game 7")
         self.listbox.insert("END", "Game 8")
+
+        self.listbox.place(x=32, y=26)
 
         button_image_1 = PhotoImage(
             file=self.relative_to_assets("button_1.png"))
