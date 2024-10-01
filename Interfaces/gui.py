@@ -22,8 +22,8 @@ def relative_to_assets(path: str) -> Path:
 def show_partie_selected(selected_option):
     print(selected_option)
 
-window = Tk()
 
+window = Tk()
 window.geometry("1024x768")
 window.configure(bg="#FFFFFF")
 
@@ -54,8 +54,9 @@ canvas.create_rectangle(
     fill="#778DA9",
     outline="")
 
+custom_font = ("Krona One", 16, "bold")
 listbox = CTkListbox(window, command=show_partie_selected, width=283, bg_color="#778DA9", button_color="#778DA9",
-                     fg_color="#778DA9", border_color="#1B263B", height=600)
+                     fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B")
 listbox.place(x=32, y=26)
 
 listbox.insert(0, "Option 0")
@@ -207,7 +208,8 @@ entry_1 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_1.place(
     x=754.0,
@@ -227,7 +229,8 @@ entry_2 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_2.place(
     x=754.0,
@@ -247,7 +250,8 @@ entry_3 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_3.place(
     x=934.0,
@@ -267,7 +271,8 @@ entry_4 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_4.place(
     x=754.0,
@@ -287,7 +292,8 @@ entry_5 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_5.place(
     x=844.0,
@@ -307,7 +313,8 @@ entry_6 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_6.place(
     x=754.0,
@@ -327,7 +334,8 @@ entry_7 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_7.place(
     x=754.0,
@@ -347,7 +355,8 @@ entry_8 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_8.place(
     x=754.0,
@@ -367,7 +376,8 @@ entry_9 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_9.place(
     x=754.0,
@@ -387,7 +397,8 @@ entry_10 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_10.place(
     x=754.0,
@@ -407,7 +418,8 @@ entry_11 = Entry(
     bd=0,
     bg="#415A77",
     fg="#000716",
-    highlightthickness=0
+    highlightthickness=0,
+    font=custom_font
 )
 entry_11.place(
     x=877.0,
