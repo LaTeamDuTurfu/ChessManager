@@ -7,6 +7,9 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+import tkinter as tk
+import customtkinter
+from CTkListbox import *
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"../Interfaces/assets/frame0/")
@@ -15,6 +18,9 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"../Interfaces/assets/frame0/")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+
+def show_partie_selected(selected_option):
+    print(selected_option)
 
 window = Tk()
 
@@ -47,6 +53,20 @@ canvas.create_rectangle(
     768.0,
     fill="#778DA9",
     outline="")
+
+listbox = CTkListbox(window, command=show_partie_selected, width=283, bg_color="#778DA9", button_color="#778DA9",
+                     fg_color="#778DA9", border_color="#1B263B", height=600)
+listbox.place(x=32, y=26)
+
+listbox.insert(0, "Option 0")
+listbox.insert(1, "Option 1")
+listbox.insert(2, "Option 2")
+listbox.insert(3, "Option 3")
+listbox.insert(4, "Option 4")
+listbox.insert(5, "Option 5")
+listbox.insert(6, "Option 6")
+listbox.insert(7, "Option 7")
+listbox.insert("END", "Option 8")
 
 button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
