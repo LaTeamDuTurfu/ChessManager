@@ -12,7 +12,7 @@ from CTkListbox import *
 class Interface:
 
     def __init__(self, database):
-        self.listbox = None
+        self.listbox: CTkListbox = None
         self.OUTPUT_PATH = Path(__file__).parent
         self.ASSETS_PATH = self.OUTPUT_PATH / Path(r"../Interfaces/assets/frame0/")
         self.window = Tk()
@@ -22,10 +22,31 @@ class Interface:
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
 
-    def deselect_button(self):
+    def delete_selection(self):
+        """ Delete la partie sélectionnée dans la database et la ListBox"""
         if self.listbox.selected is not None:
             index = self.listbox.selected_index
+            print(index)
+
+            # Update la Listbox
+            self.listbox.delete(index)
             self.listbox.deselect(index)
+
+            # Update la database
+            self.database.parties.pop(index)
+
+    def deselect_button(self):
+        """Désélectionne la partie couramment sélectionnée"""
+        if self.listbox.selected is not None:
+            index = self.listbox.selected_index
+            print(index)
+            print(self.listbox.selected)
+            self.listbox.deselect(index)
+
+    def load_database_listbox(self):
+        """ Ajoute les parties dans la listbox au démarrage"""
+        for game in self.database.parties:
+            self.listbox.insert("end", game)
 
     def run(self):
         self.window.geometry("1024x768")
@@ -58,23 +79,17 @@ class Interface:
             fill="#778DA9",
             outline="")
 
+        # Listbox management
         self.listbox = CTkListbox(self.window, command=None, width=283, bg_color="#778DA9",
                                   button_color="#778DA9",
                                   fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B",
                                   label_font=self.custom_font)
-        
-        self.listbox.insert("end", "Game 0")
+        self.load_database_listbox()
         self.listbox.insert("end", "Game 1")
         self.listbox.insert("end", "Game 2")
-        self.listbox.insert("end", "Game 3")
-        self.listbox.insert("end", "Game 4")
-        self.listbox.insert("end", "Game 5")
-        self.listbox.insert("end", "Game 6")
-        self.listbox.insert("end", "Game 7")
-        self.listbox.insert("END", "Game 8")
-
         self.listbox.place(x=32, y=26)
 
+        # Button "Add"
         button_image_1 = PhotoImage(
             file=self.relative_to_assets("button_1.png"))
         button_1 = Button(
@@ -91,6 +106,7 @@ class Interface:
             height=58.0
         )
 
+        # Button "Save"
         button_image_2 = PhotoImage(
             file=self.relative_to_assets("button_2.png"))
         button_2 = Button(
@@ -107,6 +123,7 @@ class Interface:
             height=58.0
         )
 
+        # Button "Moves"
         button_image_3 = PhotoImage(
             file=self.relative_to_assets("button_3.png"))
         button_3 = Button(
@@ -123,13 +140,14 @@ class Interface:
             height=58.0
         )
 
+        # Button "Delete"
         button_image_4 = PhotoImage(
             file=self.relative_to_assets("button_4.png"))
         button_4 = Button(
             image=button_image_4,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_4 clicked"),
+            command=self.delete_selection,
             relief="flat"
         )
         button_4.place(
@@ -139,6 +157,7 @@ class Interface:
             height=58.0
         )
 
+        # Button "Deselect"
         button_image_5 = PhotoImage(
             file=self.relative_to_assets("button_5.png"))
         button_5 = Button(

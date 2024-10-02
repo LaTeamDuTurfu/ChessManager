@@ -4,7 +4,7 @@ import os
 
 class Database:
     def __init__(self):
-        self.parties = []
+        self.parties: list = []
         self.folder_path = './Data'
 
     def load_parties(self):
