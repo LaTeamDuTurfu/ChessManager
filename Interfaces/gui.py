@@ -5,7 +5,7 @@
 from pathlib import Path
 
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar
 from CTkListbox import *
 
 
@@ -43,6 +43,10 @@ class Interface:
         """ Ajoute les parties dans la listbox au démarrage"""
         for game in self.database.parties:
             self.listbox.insert("end", game)
+
+    def check_character_limit(self, entry_text: StringVar, max_value: int):
+        if len(entry_text.get()) > 0:
+            entry_text.set(entry_text.get()[:max_value])
 
     def run(self):
         self.window.geometry("1024x768")
@@ -241,7 +245,7 @@ class Interface:
             44.0,
             image=entry_image_1
         )
-        entry_1 = Entry(
+        entry_1 = Entry(  # Entry player 1 (Blanc)
             bd=0,
             bg="#415A77",
             fg="#000716",
@@ -262,7 +266,7 @@ class Interface:
             83.0,
             image=entry_image_2
         )
-        entry_2 = Entry(
+        entry_2 = Entry(  # Entry player 2 (Noir)
             bd=0,
             bg="#415A77",
             fg="#000716",
@@ -283,12 +287,15 @@ class Interface:
             149.0,
             image=entry_image_3
         )
-        entry_3 = Entry(
+        entry_3_text = StringVar()  # the text in  your entry
+        entry_3_text.trace("w", lambda *args: self.check_character_limit(entry_3_text, 2))
+        entry_3 = Entry(  # Entry jours (JJ)
             bd=0,
             bg="#415A77",
             fg="#000716",
             highlightthickness=0,
-            font=self.custom_font
+            font=self.custom_font,
+            textvariable=entry_3_text
         )
         entry_3.place(
             x=754.0,
@@ -304,12 +311,15 @@ class Interface:
             149.0,
             image=entry_image_4
         )
-        entry_4 = Entry(
+        entry_4_text = StringVar()
+        entry_4_text.trace("w", lambda *args: self.check_character_limit(entry_4_text, 2))
+        entry_4 = Entry(  # Entry months (MM)
             bd=0,
             bg="#415A77",
             fg="#000716",
             highlightthickness=0,
-            font=self.custom_font
+            font=self.custom_font,
+            textvariable=entry_4_text
         )
         entry_4.place(
             x=836.0,
@@ -325,12 +335,15 @@ class Interface:
             149.0,
             image=entry_image_5
         )
-        entry_5 = Entry(
+        entry_5_text = StringVar()
+        entry_5_text.trace("w", lambda *args: self.check_character_limit(entry_5_text, 4))
+        entry_5 = Entry(  # Entry years (AAAA)
             bd=0,
             bg="#415A77",
             fg="#000716",
             highlightthickness=0,
-            font=self.custom_font
+            font=self.custom_font,
+            textvariable=entry_5_text
         )
         entry_5.place(
             x=917.0,
@@ -346,7 +359,7 @@ class Interface:
             239.0,
             image=entry_image_6
         )
-        entry_6 = Entry(
+        entry_6 = Entry(  # Entry "Niveau Elo (White)"
             bd=0,
             bg="#415A77",
             fg="#000716",
@@ -367,7 +380,7 @@ class Interface:
             239.0,
             image=entry_image_7
         )
-        entry_7 = Entry(
+        entry_7 = Entry(  # Entry "Niveau Elo (Black)"
             bd=0,
             bg="#415A77",
             fg="#000716",
@@ -388,7 +401,7 @@ class Interface:
             329.0,
             image=entry_image_8
         )
-        entry_8 = Entry(
+        entry_8 = Entry(  # Entry Type de Partie
             bd=0,
             bg="#415A77",
             fg="#000716",
@@ -409,7 +422,7 @@ class Interface:
             419.0,
             image=entry_image_9
         )
-        entry_9 = Entry(
+        entry_9 = Entry(  # Entry durée de la partie
             bd=0,
             bg="#415A77",
             fg="#000716",
@@ -430,12 +443,15 @@ class Interface:
             509.0,
             image=entry_image_10
         )
-        entry_10 = Entry(
+        entry_10_text = StringVar()
+        entry_10_text.trace("w", lambda *args: self.check_character_limit(entry_10_text, 1))
+        entry_10 = Entry(  # Entry résultat
             bd=0,
             bg="#415A77",
             fg="#000716",
             highlightthickness=0,
-            font=self.custom_font
+            font=self.custom_font,
+            textvariable=entry_10_text
         )
         entry_10.place(
             x=754.0,
@@ -451,7 +467,7 @@ class Interface:
             599.0,
             image=entry_image_11
         )
-        entry_11 = Entry(
+        entry_11 = Entry(  # Entry ouverture
             bd=0,
             bg="#415A77",
             fg="#000716",
