@@ -29,7 +29,6 @@ class Interface:
 
             # Update la Listbox
             self.listbox.delete(index)
-            self.listbox.deselect(index)
 
             # Update la database
             self.database.parties.pop(index)
