@@ -25,8 +25,7 @@ class Interface:
     def delete_selection(self):
         """ Delete la partie sélectionnée dans la database et la ListBox"""
         if self.listbox.selected is not None:
-            index = self.listbox.selected_index
-            print(index)
+            index = self.listbox.curselection()
 
             # Update la Listbox
             self.listbox.delete(index)
@@ -38,9 +37,7 @@ class Interface:
     def deselect_button(self):
         """Désélectionne la partie couramment sélectionnée"""
         if self.listbox.selected is not None:
-            index = self.listbox.selected_index
-            print(index)
-            print(self.listbox.selected)
+            index = self.listbox.curselection()
             self.listbox.deselect(index)
 
     def load_database_listbox(self):
