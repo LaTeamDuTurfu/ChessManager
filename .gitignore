@@ -186,3 +186,6 @@ fabric.properties
 
 # idea folder, uncomment if you don't need it
 .idea
+Models/__pycache__/__init__.cpython-312.pyc
+Models/__pycache__/joueur.cpython-312.pyc
+Models/__pycache__/partie.cpython-312.pyc
