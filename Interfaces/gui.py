@@ -21,17 +21,17 @@ class Interface:
         self.window.title('Chess Manager')
 
         # Entrys
-        self.entry_player_blanc = None
-        self.entry_player_noir = None
-        self.entry_jours = None
-        self.entry_mois = None
-        self.entry_années = None
-        self.entry_elo_blanc = None
-        self.entry_elo_noir = None
-        self.entry_type_partie = None
-        self.entry_durée_partie = None
-        self.entry_résultat = None
-        self.entry_ouverture = None
+        self.entry_player_blanc: Entry = None
+        self.entry_player_noir: Entry = None
+        self.entry_jours: Entry = None
+        self.entry_mois: Entry = None
+        self.entry_années: Entry = None
+        self.entry_elo_blanc: Entry = None
+        self.entry_elo_noir: Entry = None
+        self.entry_type_partie: Entry = None
+        self.entry_durée_partie: Entry = None
+        self.entry_résultat: Entry = None
+        self.entry_ouverture: Entry = None
 
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
@@ -72,12 +72,15 @@ class Interface:
     def display_info_games(self):
         """Prend les informations d'une partie et les sets dans les entry"""
         # Clear le texte qui était dans les entry
-        self.clear_entrys([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois, self.entry_années, self.entry_elo_blanc,
-                           self.entry_elo_noir, self.entry_8, self.entry_durée_partie, self.entry_résultat, self.entry_ouverture])
+        self.clear_entrys([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                           self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                           self.entry_durée_partie, self.entry_résultat, self.entry_ouverture])
 
         index = self.listbox.curselection()
 
         selected_game = self.database.parties[index]
+
+        self.entry_player_blanc.insert("END", selected_game)
 
     def run_main_window(self):
         self.window.geometry("1024x768")
@@ -154,6 +157,9 @@ class Interface:
 
         image_image_8 = PhotoImage(file=self.relative_to_assets("image_8.png"))
         image_8 = canvas.create_image(640.0, 599.0, image=image_image_8)
+
+        image_image_9 = PhotoImage(file=self.relative_to_assets("image_9.png"))
+        image_9 = canvas.create_image(668.0, 544.0, image=image_image_9)
 
         # Entry player Blanc
         entry_image_1 = PhotoImage(file=self.relative_to_assets("entry_1.png"))
@@ -232,6 +238,12 @@ class Interface:
         entry_bg_11 = canvas.create_image(875.5, 599.0, image=entry_image_11)
         self.entry_ouverture = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
         self.entry_ouverture.place(x=754.0, y=581.0, width=243.0, height=34.0)
+
+        # Entry moves
+        entry_image_12 = PhotoImage(file=self.relative_to_assets("entry_12.png"))
+        entry_bg_12 = canvas.create_image(875.5, 582.5, image=entry_image_12)
+        entry_12 = Text(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        entry_12.place(x=754.0, y=526.0, width=243.0, height=111.0)
 
         canvas.create_rectangle(807.0, 146.0, 829.0, 149.0, fill="#FFFFFF", outline="")
         canvas.create_rectangle(889.0, 146.0, 911.0, 149.0, fill="#FFFFFF", outline="")
