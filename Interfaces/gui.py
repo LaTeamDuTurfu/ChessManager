@@ -32,6 +32,7 @@ class Interface:
         self.entry_durée_partie: Entry = None
         self.entry_résultat: Entry = None
         self.entry_ouverture: Entry = None
+        self.entry_moves: Entry = None
 
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
@@ -134,33 +135,6 @@ class Interface:
                           relief="flat")
         button_5.place(x=36.0, y=650.0, width=307.0, height=31.0)
 
-        image_image_1 = PhotoImage(file=self.relative_to_assets("image_1.png"))
-        image_1 = canvas.create_image(187.0, 334.0, image=image_image_1)
-
-        image_image_2 = PhotoImage(file=self.relative_to_assets("image_2.png"))
-        image_2 = canvas.create_image(659.0, 44.0, image=image_image_2)
-
-        image_image_3 = PhotoImage(file=self.relative_to_assets("image_3.png"))
-        image_3 = canvas.create_image(682.0, 149.0, image=image_image_3)
-
-        image_image_4 = PhotoImage(file=self.relative_to_assets("image_4.png"))
-        image_4 = canvas.create_image(622.0, 239.0, image=image_image_4)
-
-        image_image_5 = PhotoImage(file=self.relative_to_assets("image_5.png"))
-        image_5 = canvas.create_image(604.0, 329.0, image=image_image_5)
-
-        image_image_6 = PhotoImage(file=self.relative_to_assets("image_6.png"))
-        image_6 = canvas.create_image(579.0, 419.0, image=image_image_6)
-
-        image_image_7 = PhotoImage(file=self.relative_to_assets("image_7.png"))
-        image_7 = canvas.create_image(653.0, 509.0, image=image_image_7)
-
-        image_image_8 = PhotoImage(file=self.relative_to_assets("image_8.png"))
-        image_8 = canvas.create_image(640.0, 599.0, image=image_image_8)
-
-        image_image_9 = PhotoImage(file=self.relative_to_assets("image_9.png"))
-        image_9 = canvas.create_image(668.0, 544.0, image=image_image_9)
-
         # Entry player Blanc
         entry_image_1 = PhotoImage(file=self.relative_to_assets("entry_1.png"))
         entry_bg_1 = canvas.create_image(842.0, 44.0, image=entry_image_1)
@@ -214,69 +188,114 @@ class Interface:
 
         # Entry Type de Partie
         entry_image_8 = PhotoImage(file=self.relative_to_assets("entry_8.png"))
-        entry_bg_8 = canvas.create_image(875.5, 329.0, image=entry_image_8)
+        entry_bg_8 = canvas.create_image(875.5, 300.0, image=entry_image_8)
         self.entry_type_partie = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
-        self.entry_type_partie.place(x=754.0, y=311.0, width=243.0, height=34.0)
+        self.entry_type_partie.place(x=754.0, y=282.0, width=243.0, height=34.0)
 
         # Entry durée de la partie
         entry_image_9 = PhotoImage(file=self.relative_to_assets("entry_9.png"))
-        entry_bg_9 = canvas.create_image(819.0, 419.0, image=entry_image_9)
+        entry_bg_9 = canvas.create_image(819.0, 361.0, image=entry_image_9)
         self.entry_durée_partie = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
-        self.entry_durée_partie.place(x=754.0, y=401.0, width=130.0, height=34.0)
+        self.entry_durée_partie.place(x=754.0, y=343.0, width=130.0, height=34.0)
 
         # Entry résultat
         entry_image_10 = PhotoImage(file=self.relative_to_assets("entry_10.png"))
-        entry_bg_10 = canvas.create_image(794.0, 509.0, image=entry_image_10)
+        entry_bg_10 = canvas.create_image(794.0, 422.0, image=entry_image_10)
         entry_10_text = StringVar()
         entry_10_text.trace("w", lambda *args: self.check_character_limit(entry_10_text, 1))
         self.entry_résultat = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
                                     textvariable=entry_10_text)
-        self.entry_résultat.place(x=754.0, y=491.0, width=80.0, height=34.0)
+        self.entry_résultat.place(x=754.0, y=404.0, width=80.0, height=34.0)
 
         # Entry ouverture
         entry_image_11 = PhotoImage(file=self.relative_to_assets("entry_11.png"))
-        entry_bg_11 = canvas.create_image(875.5, 599.0, image=entry_image_11)
+        entry_bg_11 = canvas.create_image(875.5, 483.0, image=entry_image_11)
         self.entry_ouverture = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
-        self.entry_ouverture.place(x=754.0, y=581.0, width=243.0, height=34.0)
+        self.entry_ouverture.place(x=754.0, y=465.0, width=243.0, height=34.0)
 
         # Entry moves
         entry_image_12 = PhotoImage(file=self.relative_to_assets("entry_12.png"))
         entry_bg_12 = canvas.create_image(875.5, 582.5, image=entry_image_12)
-        entry_12 = Text(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
-        entry_12.place(x=754.0, y=526.0, width=243.0, height=111.0)
+        self.entry_moves = Text(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        self.entry_moves.place(x=754.0, y=526.0, width=243.0, height=111.0)
 
         canvas.create_rectangle(807.0, 146.0, 829.0, 149.0, fill="#FFFFFF", outline="")
         canvas.create_rectangle(889.0, 146.0, 911.0, 149.0, fill="#FFFFFF", outline="")
 
+        image_image_1 = PhotoImage(file=self.relative_to_assets("image_1.png"))
+        image_1 = canvas.create_image(187.0, 334.0, image=image_image_1)
+
+        # Texte joueur
+        image_image_2 = PhotoImage(file=self.relative_to_assets("image_2.png"))
+        image_2 = canvas.create_image(659.0, 44.0, image=image_image_2)
+
+        # Texte Date
+        image_image_3 = PhotoImage(file=self.relative_to_assets("image_3.png"))
+        image_3 = canvas.create_image(682.0, 149.0, image=image_image_3)
+
+        # Texte Niveau (Elo)
+        image_image_4 = PhotoImage(file=self.relative_to_assets("image_4.png"))
+        image_4 = canvas.create_image(622.0, 239.0, image=image_image_4)
+
+        # Texte type de partie
+        image_image_5 = PhotoImage(file=self.relative_to_assets("image_5.png"))
+        image_5 = canvas.create_image(604.0, 300.0, image=image_image_5)
+
+        # Texte Durée de la partie
+        image_image_6 = PhotoImage(file=self.relative_to_assets("image_6.png"))
+        image_6 = canvas.create_image(579.0, 361.0, image=image_image_6)
+
+        # Texte Résultat
+        image_image_7 = PhotoImage(file=self.relative_to_assets("image_7.png"))
+        image_7 = canvas.create_image(653.0, 422.0, image=image_image_7)
+
+        # Texte Ouverture
+        image_image_8 = PhotoImage(file=self.relative_to_assets("image_8.png"))
+        image_8 = canvas.create_image(640.0, 483.0, image=image_image_8)
+
+        # Texte Moves
         image_image_9 = PhotoImage(file=self.relative_to_assets("image_9.png"))
-        image_9 = canvas.create_image(778.0, 180.0, image=image_image_9)
+        image_9 = canvas.create_image(668.0, 544.0, image=image_image_9)
 
+        # Texte JJ
         image_image_10 = PhotoImage(file=self.relative_to_assets("image_10.png"))
-        image_10 = canvas.create_image(860.0, 180.0, image=image_image_10)
+        image_10 = canvas.create_image(778.0, 180.0, image=image_image_10)
 
+        # Texte MM
         image_image_11 = PhotoImage(file=self.relative_to_assets("image_11.png"))
-        image_11 = canvas.create_image(956.0, 180.0, image=image_image_11)
+        image_11 = canvas.create_image(860.0, 180.0, image=image_image_11)
 
+        # Texte AAAA
         image_image_12 = PhotoImage(file=self.relative_to_assets("image_12.png"))
-        image_12 = canvas.create_image(941.0, 419.0, image=image_image_12)
+        image_12 = canvas.create_image(956.0, 180.0, image=image_image_12)
 
+        # Texte minutes
         image_image_13 = PhotoImage(file=self.relative_to_assets("image_13.png"))
-        image_13 = canvas.create_image(921.0, 518.0, image=image_image_13)
+        image_13 = canvas.create_image(941.0, 361.0, image=image_image_13)
 
+        # Texte Blanc/Noir/Draw
         image_image_14 = PhotoImage(file=self.relative_to_assets("image_14.png"))
-        image_14 = canvas.create_image(814.0, 270.0, image=image_image_14)
+        image_14 = canvas.create_image(921.0, 422.0, image=image_image_14)
 
+        # Texte Blanc
         image_image_15 = PhotoImage(file=self.relative_to_assets("image_15.png"))
-        image_15 = canvas.create_image(968.0, 44.0, image=image_image_15)
+        image_15 = canvas.create_image(814.0, 270.0, image=image_image_15)
 
+        # Texte Blanc
         image_image_16 = PhotoImage(file=self.relative_to_assets("image_16.png"))
-        image_16 = canvas.create_image(937.0, 270.0, image=image_image_16)
+        image_16 = canvas.create_image(968.0, 44.0, image=image_image_16)
 
+        # Texte Noir
         image_image_17 = PhotoImage(file=self.relative_to_assets("image_17.png"))
-        image_17 = canvas.create_image(969.0, 83.0, image=image_image_17)
+        image_17 = canvas.create_image(937.0, 270.0, image=image_image_17)
 
+        # Texte Noir
         image_image_18 = PhotoImage(file=self.relative_to_assets("image_18.png"))
-        image_18 = canvas.create_image(187.0, 319.0, image=image_image_18)
+        image_18 = canvas.create_image(969.0, 83.0, image=image_image_18)
+
+        # Texte placeholder
+        image_image_19 = PhotoImage(file=self.relative_to_assets("image_19.png"))
+        image_19 = canvas.create_image(187.0, 319.0, image=image_image_19)
 
         self.window.resizable(False, False)
         self.window.mainloop()
