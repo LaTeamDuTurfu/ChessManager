@@ -69,23 +69,37 @@ class Interface:
     def clear_entrys(entrys_list: list):
         """Efface les contenus des entrys"""
         for entry in entrys_list:
-            entry.delete(0, "end")
+            if isinstance(entry, Entry):
+                entry.delete(0, "end")
+            elif isinstance(entry, Text):
+                entry.delete("1.0", "end")
 
-    def display_info_games(self):
+    def display_info_games(self, game_info=None):
         """Prend les informations d'une partie et les sets dans les entry"""
         # Clear le texte qui était dans les entry
         self.clear_entrys([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
                            self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                           self.entry_durée_partie, self.entry_résultat, self.entry_ouverture])
+                           self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
 
         index = self.listbox.curselection()
 
         selected_game: Partie = self.database.parties[index]
 
-        self.entry_player_blanc.insert("END", selected_game.joueur1.nom)
-        self.entry_player_noir.insert("END", selected_game.joueur2.nom)
+        self.entry_player_blanc.insert(0, selected_game.joueur1.nom)
+        self.entry_player_noir.insert(0, selected_game.joueur2.nom)
+        self.entry_jours.insert(0, selected_game.date[0])
+        self.entry_mois.insert(0, selected_game.date[1])
+        self.entry_années.insert(0, selected_game.date[2])
+        self.entry_elo_blanc.insert(0, selected_game.joueur1.elo)
+        self.entry_elo_noir.insert(0, selected_game.joueur2.elo)
+        self.entry_type_partie.insert(0, selected_game.type_partie)
+        self.entry_durée_partie.insert(0, selected_game.durée)
+        self.entry_résultat.insert(0, selected_game.résultat)
+        self.entry_ouverture.insert(0, selected_game.ouverture)
+        self.entry_moves.insert("1.0", selected_game.moves)
 
     def run_main_window(self):
+        """Lance la mainloop de l'interface/Catalogue"""
         self.window.geometry("1024x768")
         self.window.configure(bg="#FFFFFF")
 
@@ -96,7 +110,7 @@ class Interface:
         canvas.create_rectangle(375.0, 0.0, 1024.0, 768.0, fill="#778DA9", outline="")
 
         # Listbox management
-        self.listbox = CTkListbox(self.window, command=None, width=283, bg_color="#778DA9",
+        self.listbox = CTkListbox(self.window, command=self.display_info_games, width=283, bg_color="#778DA9",
                                   button_color="#778DA9",
                                   fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B",
                                   label_font=self.custom_font)

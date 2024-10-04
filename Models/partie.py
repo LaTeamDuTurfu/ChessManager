@@ -13,7 +13,7 @@ class Partie:
         self.moves: str = moves
 
     def __str__(self):
-        return f"{self.joueur1} vs {self.joueur2}"
+        return f"{self.joueur1} vs {self.joueur2}\n{self.type_partie}"
 
     def __repr__(self):
         self.__str__()
