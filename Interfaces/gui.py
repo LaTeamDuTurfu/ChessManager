@@ -7,6 +7,7 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar
 from CTkListbox import *
+from Models import Partie
 
 
 class Interface:
@@ -79,9 +80,10 @@ class Interface:
 
         index = self.listbox.curselection()
 
-        selected_game = self.database.parties[index]
+        selected_game: Partie = self.database.parties[index]
 
-        self.entry_player_blanc.insert("END", selected_game)
+        self.entry_player_blanc.insert("END", selected_game.joueur1.nom)
+        self.entry_player_noir.insert("END", selected_game.joueur2.nom)
 
     def run_main_window(self):
         self.window.geometry("1024x768")
