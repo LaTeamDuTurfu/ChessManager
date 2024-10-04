@@ -9,4 +9,4 @@ if __name__ == '__main__':
         print(i)
 
     interface = Interface(database)
-    interface.run()
+    interface.run_main_window()

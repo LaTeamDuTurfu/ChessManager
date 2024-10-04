@@ -47,7 +47,7 @@ class Interface:
             # Update la database
             self.database.parties.pop(index)
 
-    def deselect_button(self):
+    def deselect_selection(self):
         """Désélectionne la partie couramment sélectionnée"""
         if self.listbox.selected is not None:
             index = self.listbox.curselection()
@@ -74,7 +74,7 @@ class Interface:
         """Prend les informations d'une partie et les sets dans les entry"""
         pass
 
-    def run(self):
+    def run_main_window(self):
         self.window.geometry("1024x768")
         self.window.configure(bg="#FFFFFF")
 
@@ -122,7 +122,7 @@ class Interface:
 
         # Button "Deselect"
         button_image_5 = PhotoImage(file=self.relative_to_assets("button_5.png"))
-        button_5 = Button(image=button_image_5, borderwidth=0, highlightthickness=0, command=self.deselect_button,
+        button_5 = Button(image=button_image_5, borderwidth=0, highlightthickness=0, command=self.deselect_selection,
                           relief="flat")
         button_5.place(x=36.0, y=650.0, width=307.0, height=31.0)
 
