@@ -19,6 +19,9 @@ class Interface:
         self.custom_font = ("Krona One", 16, "bold")
         self.database = database
 
+        # Entry player 1 (Blanc)
+        self.entry_1 = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
 
@@ -44,9 +47,21 @@ class Interface:
         for game in self.database.parties:
             self.listbox.insert("end", game)
 
-    def check_character_limit(self, entry_text: StringVar, max_value: int):
+    @staticmethod
+    def check_character_limit(entry_text: StringVar, max_value: int):
         if len(entry_text.get()) > 0:
             entry_text.set(entry_text.get()[:max_value])
+
+    @staticmethod
+    def clear_entrys(entrys_list: list):
+        """Efface les contenus des entrys"""
+        for entry in entrys_list:
+            entry.delete(0, "end")
+        pass
+
+    def display_info_games(self):
+        """Prend les informations d'une partie et les sets dans les entry"""
+        pass
 
     def run(self):
         self.window.geometry("1024x768")
@@ -245,89 +260,33 @@ class Interface:
             44.0,
             image=entry_image_1
         )
-        entry_1 = Entry(  # Entry player 1 (Blanc)
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font
-        )
-        entry_1.place(
-            x=754.0,
-            y=26.0,
-            width=176.0,
-            height=34.0
-        )
+        self.entry_1.place(x=754.0, y=26.0, width=176.0, height=34.0)
 
-        entry_image_2 = PhotoImage(
-            file=self.relative_to_assets("entry_2.png"))
-        entry_bg_2 = canvas.create_image(
-            842.0,
-            83.0,
-            image=entry_image_2
-        )
-        entry_2 = Entry(  # Entry player 2 (Noir)
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font
-        )
-        entry_2.place(
-            x=754.0,
-            y=65.0,
-            width=176.0,
-            height=34.0
-        )
+        # Entry player Noir
+        entry_image_2 = PhotoImage(file=self.relative_to_assets("entry_2.png"))
+        entry_bg_2 = canvas.create_image(842.0, 83.0, image=entry_image_2)
+        entry_2 = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        entry_2.place(x=754.0, y=65.0, width=176.0, height=34.0)
 
-        entry_image_3 = PhotoImage(
-            file=self.relative_to_assets("entry_3.png"))
-        entry_bg_3 = canvas.create_image(
-            779.0,
-            149.0,
-            image=entry_image_3
-        )
+        # Entry jours (JJ)
+        entry_image_3 = PhotoImage(file=self.relative_to_assets("entry_3.png"))
+        entry_bg_3 = canvas.create_image(779.0, 149.0, image=entry_image_3)
         entry_3_text = StringVar()  # the text in  your entry
         entry_3_text.trace("w", lambda *args: self.check_character_limit(entry_3_text, 2))
-        entry_3 = Entry(  # Entry jours (JJ)
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font,
-            textvariable=entry_3_text
-        )
-        entry_3.place(
-            x=754.0,
-            y=131.0,
-            width=50.0,
-            height=34.0
-        )
+        entry_3 = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
+                        textvariable=entry_3_text)
+        entry_3.place(x=754.0, y=131.0, width=50.0, height=34.0)
 
-        entry_image_4 = PhotoImage(
-            file=self.relative_to_assets("entry_4.png"))
-        entry_bg_4 = canvas.create_image(
-            861.0,
-            149.0,
-            image=entry_image_4
-        )
+        # Entry months (MM)
+        entry_image_4 = PhotoImage(file=self.relative_to_assets("entry_4.png"))
+        entry_bg_4 = canvas.create_image(861.0, 149.0, image=entry_image_4)
         entry_4_text = StringVar()
         entry_4_text.trace("w", lambda *args: self.check_character_limit(entry_4_text, 2))
-        entry_4 = Entry(  # Entry months (MM)
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font,
-            textvariable=entry_4_text
-        )
-        entry_4.place(
-            x=836.0,
-            y=131.0,
-            width=50.0,
-            height=34.0
-        )
+        entry_4 = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
+                        textvariable=entry_4_text)
+        entry_4.place(x=836.0,y=131.0,width=50.0,height=34.0)
 
+        # Entry years (AAAA)
         entry_image_5 = PhotoImage(
             file=self.relative_to_assets("entry_5.png"))
         entry_bg_5 = canvas.create_image(
@@ -337,149 +296,48 @@ class Interface:
         )
         entry_5_text = StringVar()
         entry_5_text.trace("w", lambda *args: self.check_character_limit(entry_5_text, 4))
-        entry_5 = Entry(  # Entry years (AAAA)
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font,
-            textvariable=entry_5_text
-        )
-        entry_5.place(
-            x=917.0,
-            y=131.0,
-            width=80.0,
-            height=34.0
-        )
+        entry_5 = Entry(bd=0,bg="#415A77",fg="#000716",highlightthickness=0,font=self.custom_font,
+            textvariable=entry_5_text)
+        entry_5.place(x=917.0,y=131.0,width=80.0,height=34.0)
 
-        entry_image_6 = PhotoImage(
-            file=self.relative_to_assets("entry_6.png"))
-        entry_bg_6 = canvas.create_image(
-            814.0,
-            239.0,
-            image=entry_image_6
-        )
-        entry_6 = Entry(  # Entry "Niveau Elo (White)"
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font
-        )
-        entry_6.place(
-            x=754.0,
-            y=221.0,
-            width=120.0,
-            height=34.0
-        )
+        # Entry "Niveau Elo (White)"
+        entry_image_6 = PhotoImage(file=self.relative_to_assets("entry_6.png"))
+        entry_bg_6 = canvas.create_image(814.0,239.0,image=entry_image_6)
+        entry_6 = Entry(bd=0,bg="#415A77",fg="#000716",highlightthickness=0,font=self.custom_font)
+        entry_6.place(x=754.0,y=221.0,width=120.0,height=34.0)
 
-        entry_image_7 = PhotoImage(
-            file=self.relative_to_assets("entry_7.png"))
-        entry_bg_7 = canvas.create_image(
-            937.0,
-            239.0,
-            image=entry_image_7
-        )
-        entry_7 = Entry(  # Entry "Niveau Elo (Black)"
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font
-        )
-        entry_7.place(
-            x=877.0,
-            y=221.0,
-            width=120.0,
-            height=34.0
-        )
+        # Entry "Niveau Elo (Black)"
+        entry_image_7 = PhotoImage(file=self.relative_to_assets("entry_7.png"))
+        entry_bg_7 = canvas.create_image(937.0,239.0,image=entry_image_7)
+        entry_7 = Entry(bd=0,bg="#415A77",fg="#000716",highlightthickness=0,font=self.custom_font)
+        entry_7.place(x=877.0,y=221.0,width=120.0,height=34.0)
 
-        entry_image_8 = PhotoImage(
-            file=self.relative_to_assets("entry_8.png"))
-        entry_bg_8 = canvas.create_image(
-            875.5,
-            329.0,
-            image=entry_image_8
-        )
-        entry_8 = Entry(  # Entry Type de Partie
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font
-        )
-        entry_8.place(
-            x=754.0,
-            y=311.0,
-            width=243.0,
-            height=34.0
-        )
+        # Entry Type de Partie
+        entry_image_8 = PhotoImage(file=self.relative_to_assets("entry_8.png"))
+        entry_bg_8 = canvas.create_image(875.5,329.0,image=entry_image_8)
+        entry_8 = Entry(  bd=0,bg="#415A77",fg="#000716",highlightthickness=0,font=self.custom_font)
+        entry_8.place(x=754.0,y=311.0,width=243.0,height=34.0)
 
-        entry_image_9 = PhotoImage(
-            file=self.relative_to_assets("entry_9.png"))
-        entry_bg_9 = canvas.create_image(
-            819.0,
-            419.0,
-            image=entry_image_9
-        )
-        entry_9 = Entry(  # Entry durée de la partie
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font
-        )
-        entry_9.place(
-            x=754.0,
-            y=401.0,
-            width=130.0,
-            height=34.0
-        )
+        # Entry durée de la partie
+        entry_image_9 = PhotoImage(file=self.relative_to_assets("entry_9.png"))
+        entry_bg_9 = canvas.create_image(819.0,419.0,image=entry_image_9)
+        entry_9 = Entry(bd=0,bg="#415A77",fg="#000716",highlightthickness=0,font=self.custom_font)
+        entry_9.place(x=754.0,y=401.0,width=130.0,height=34.0)
 
-        entry_image_10 = PhotoImage(
-            file=self.relative_to_assets("entry_10.png"))
-        entry_bg_10 = canvas.create_image(
-            794.0,
-            509.0,
-            image=entry_image_10
-        )
+        # Entry résultat
+        entry_image_10 = PhotoImage(file=self.relative_to_assets("entry_10.png"))
+        entry_bg_10 = canvas.create_image(794.0,509.0,image=entry_image_10)
         entry_10_text = StringVar()
         entry_10_text.trace("w", lambda *args: self.check_character_limit(entry_10_text, 1))
-        entry_10 = Entry(  # Entry résultat
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font,
-            textvariable=entry_10_text
-        )
-        entry_10.place(
-            x=754.0,
-            y=491.0,
-            width=80.0,
-            height=34.0
-        )
+        entry_10 = Entry(bd=0,bg="#415A77",fg="#000716",highlightthickness=0,font=self.custom_font,
+            textvariable=entry_10_text)
+        entry_10.place(x=754.0,y=491.0,width=80.0,height=34.0)
 
-        entry_image_11 = PhotoImage(
-            file=self.relative_to_assets("entry_11.png"))
-        entry_bg_11 = canvas.create_image(
-            875.5,
-            599.0,
-            image=entry_image_11
-        )
-        entry_11 = Entry(  # Entry ouverture
-            bd=0,
-            bg="#415A77",
-            fg="#000716",
-            highlightthickness=0,
-            font=self.custom_font
-        )
-        entry_11.place(
-            x=754.0,
-            y=581.0,
-            width=243.0,
-            height=34.0
-        )
+        # Entry ouverture
+        entry_image_11 = PhotoImage(file=self.relative_to_assets("entry_11.png"))
+        entry_bg_11 = canvas.create_image(875.5,599.0,image=entry_image_11)
+        entry_11 = Entry(  bd=0,bg="#415A77",fg="#000716",highlightthickness=0,font=self.custom_font)
+        entry_11.place(x=754.0,y=581.0,width=243.0,height=34.0)
 
         canvas.create_rectangle(
             807.0,
