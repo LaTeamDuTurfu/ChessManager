@@ -36,8 +36,8 @@ class Database:
         file_path = os.path.join(self.folder_path, filename)
 
         with open(file_path, 'a') as f:
-            f.write(game.joueur1)
-            f.write(game.joueur2)
+            f.write(f'["{game.joueur1.nom}", {game.joueur1.niveau}]')
+            f.write(f'["{game.joueur2.nom}", {game.joueur2.niveau}]')
             f.write(game.date)
             f.write(game.type_partie)
             f.write(game.durée)
