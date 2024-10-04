@@ -99,8 +99,6 @@ class Interface:
                                   fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B",
                                   label_font=self.custom_font)
         self.load_database_listbox()
-        self.listbox.insert("end", "Game 1")
-        self.listbox.insert("end", "Game 2")
         self.listbox.place(x=32, y=26)
 
         # Button "Add"
