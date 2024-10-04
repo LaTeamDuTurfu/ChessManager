@@ -21,7 +21,7 @@ class Interface:
         self.database = database
         self.window.title('Chess Manager')
 
-        # Entrys
+        # Entrys (déclaration pour que python ne chiale pas)
         self.entry_player_blanc: Entry = None
         self.entry_player_noir: Entry = None
         self.entry_jours: Entry = None
@@ -36,6 +36,7 @@ class Interface:
         self.entry_moves: Entry = None
 
     def relative_to_assets(self, path: str) -> Path:
+        """Chemin d'accès pour les assets"""
         return self.ASSETS_PATH / Path(path)
 
     def delete_selection(self):
@@ -62,6 +63,7 @@ class Interface:
 
     @staticmethod
     def check_character_limit(entry_text: StringVar, max_value: int):
+        """S'assure qu'une entry ne dépasse un certain nombre de characters"""
         if len(entry_text.get()) > 0:
             entry_text.set(entry_text.get()[:max_value])
 
@@ -81,10 +83,13 @@ class Interface:
                            self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
                            self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
 
+        # Va get l'index sélectionné
         index = self.listbox.curselection()
 
+        # Trouve la partie dans la database
         selected_game: Partie = self.database.parties[index]
 
+        # Fill les entry avec les game infos
         self.entry_player_blanc.insert(0, selected_game.joueur1.nom)
         self.entry_player_noir.insert(0, selected_game.joueur2.nom)
         self.entry_jours.insert(0, selected_game.date[0])
