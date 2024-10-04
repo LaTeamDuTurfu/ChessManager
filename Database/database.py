@@ -8,22 +8,16 @@ class Database:
         self.folder_path = './Data'
 
     def load_parties(self):
-        for file in os.listdir(self.folder_path): # Pour parcourir tous les fichiers du dossiers
+        for file in os.listdir(self.folder_path): # Pour parcourir tous les fichiers des dossiers
             if file.endswith('.pgn'):
                 file_path = os.path.join(self.folder_path, file)
 
                 with open(file_path, 'r') as f:
                     # Initialise le joueur 1
-                    joueur1 = f.readline().strip()
-                    joueur1 = joueur1.strip("[]")
-                    joueur1 = joueur1.rsplit(',', 1)
-                    joueur1 = Joueur(joueur1[0].strip().strip('"'), int(joueur1[1].strip()))
+                    joueur1 = self.strip_and_initialize_player(f.readline())
 
                     # Initialise le joueur 2
-                    joueur2 = f.readline().strip()
-                    joueur2 = joueur2.strip("[]")
-                    joueur2 = joueur2.rsplit(',', 1)
-                    joueur2 = Joueur(joueur2[0].strip().strip('"'), int(joueur2[1].strip()))
+                    joueur2 = self.strip_and_initialize_player(f.readline())
 
                     # Lit et sépare la date
                     date = f.readline()
@@ -31,22 +25,24 @@ class Database:
                     date = date.split("-")
 
                     # Lit et strip le non-nécessaire
-                    type_partie = self.strip_excess(f.readline())
+                    type_partie = self.strip_brackets_quotes(f.readline())
 
                     # Lit et strip le non-nécessaire
-                    durée = self.strip_excess(f.readline())
+                    durée = self.strip_brackets_quotes(f.readline())
 
                     # Lit et strip le non-nécessaire
-                    résultat = self.strip_excess(f.readline())
+                    résultat = self.strip_brackets_quotes(f.readline())
 
                     # Lit et strip le non-nécessaire
-                    ouverture = self.strip_excess(f.readline())
+                    ouverture = self.strip_brackets_quotes(f.readline())
 
                     moves = f.readline()
+
+                    # Instancie et ajouter la partie à la database
                     nouvelle_partie = Partie(joueur1, joueur2, date, type_partie, durée, résultat, ouverture, moves)
                     self.parties.append(nouvelle_partie)
 
-        print('Les parties ont été téléchargées avec succès.')
+        print('Les parties ont été téléchargées avec succès. ✅')
 
     def save_partie(self, filename, game: Partie):
         file_path = os.path.join(self.folder_path, filename)
@@ -64,5 +60,10 @@ class Database:
         print(f'Le fichier {filename} a été sauvegardé dans {self.folder_path}')
 
     @staticmethod
-    def strip_excess(string):
+    def strip_brackets_quotes(string):
         return string.strip().strip("[]").strip('"')
+
+    @staticmethod
+    def strip_and_initialize_player(string):
+        string = string.strip().strip("[]").rsplit(',', 1)
+        return Joueur(string[0].strip().strip('"'), int(string[1].strip()))
