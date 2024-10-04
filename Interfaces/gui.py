@@ -18,6 +18,7 @@ class Interface:
         self.window = Tk()
         self.custom_font = ("Krona One", 16, "bold")
         self.database = database
+        self.window.title('Chess Manager')
 
     def relative_to_assets(self, path: str) -> Path:
         return self.ASSETS_PATH / Path(path)
