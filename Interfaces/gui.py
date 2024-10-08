@@ -204,7 +204,6 @@ class Interface:
 
     def initialize_chess_game(self):
         moves = self.entry_moves.get('1.0', 'end')
-        print(f"{moves=}")
         if len(moves.strip()) > 0:
             popup = Popup('Visionneur de partie', '700x700', self.window)
             ChessGUI(popup.create_popup(), moves)
