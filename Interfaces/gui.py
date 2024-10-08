@@ -5,9 +5,115 @@
 from pathlib import Path
 
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar, Toplevel, Frame
 from CTkListbox import *
 from Models import Partie
+import chess
+import chess.pgn
+from PIL import Image, ImageTk
+import io
+
+class Popup():
+
+    def __init__(self, title, geometry, root):
+        self.title = title
+        self.geometry = geometry
+        self.root = root
+
+    def create_popup(self):
+        popup = Toplevel(self.root) # permet de lier la popup à une fenêtre parent
+        popup.title(self.title)
+        popup.geometry(self.geometry)
+
+        return popup
+
+class ChessGUI:
+    BOARD_SIZE = 600
+    SQUARE_SIZE = BOARD_SIZE // 8
+    WHITE = "#F0D9B5"
+    BLACK = "#B58863"
+
+    def __init__(self, root, moves):
+        self.root = root
+        self.root.title("Replayer de Partie d'Échecs")
+        self.canvas = Canvas(root, width=ChessGUI.BOARD_SIZE, height=ChessGUI.BOARD_SIZE)
+        self.canvas.pack()
+
+        self.board = chess.Board()
+        self.moves = moves
+        self.current_move = -1
+
+        # Charger les images des pièces
+        self.piece_images = self.load_piece_images()
+
+        # Ajouter les boutons
+        button_frame = Frame(root)
+        button_frame.pack()
+
+        prev_button = Button(button_frame, text="<< Précédent", command=self.prev_move)
+        prev_button.grid(row=0, column=0)
+
+        next_button = Button(button_frame, text="Suivant >>", command=self.next_move)
+        next_button.grid(row=0, column=1)
+
+        self.draw_board()
+
+
+    def load_piece_images(self):
+        pieces = {}
+        piece_names = {
+            'P': 'white_pawn.png', 'N': 'white_knight.png', 'B': 'white_bishop.png',
+            'R': 'white_rook.png', 'Q': 'white_queen.png', 'K': 'white_king.png',
+            'p': 'black_pawn.png', 'n': 'black_knight.png', 'b': 'black_bishop.png',
+            'r': 'black_rook.png', 'q': 'black_queen.png', 'k': 'black_king.png'
+        }
+
+        for piece, filename in piece_names.items():
+            image = Image.open(f"Interfaces/chess_pieces/{filename}")
+            image = image.resize((ChessGUI.SQUARE_SIZE, ChessGUI.SQUARE_SIZE))
+            pieces[piece] = ImageTk.PhotoImage(image)
+
+        return pieces
+
+    def draw_board(self): # Fait par ChatGPT
+        self.canvas.delete("all")
+        colors = [ChessGUI.WHITE, ChessGUI.BLACK]
+        for row in range(8):
+            for col in range(8):
+                color = colors[(row + col) % 2]
+                x1 = col * ChessGUI.SQUARE_SIZE
+                y1 = row * ChessGUI.SQUARE_SIZE
+                x2 = x1 + ChessGUI.SQUARE_SIZE
+                y2 = y1 + ChessGUI.SQUARE_SIZE
+                self.canvas.create_rectangle(x1, y1, x2, y2, fill=color)
+
+        for square in chess.SQUARES:
+            piece = self.board.piece_at(square)
+            if piece:
+                x = chess.square_file(square) * ChessGUI.SQUARE_SIZE
+                y = (7 - chess.square_rank(square)) * ChessGUI.SQUARE_SIZE
+                piece_image = self.piece_images[piece.symbol()]
+                self.canvas.create_image(x, y, anchor='nw', image=piece_image)
+
+    def load_pgn(self): # Fait par ChatGPT
+        pgn_stream = io.StringIO(self.moves)
+        game = chess.pgn.read_game(pgn_stream)
+        self.board = game.board()
+        self.moves = list(game.mainline_moves())
+        self.current_move = -1
+        self.draw_board()
+
+    def next_move(self):
+        if self.current_move < len(self.moves) - 1:
+            self.current_move += 1
+            self.board.push(self.moves[self.current_move])
+            self.draw_board()
+
+    def prev_move(self):
+        if self.current_move >= 0:
+            self.board.pop()
+            self.current_move -= 1
+            self.draw_board()
 
 
 class Interface:
@@ -33,7 +139,7 @@ class Interface:
         self.entry_durée_partie: Entry = None
         self.entry_résultat: Entry = None
         self.entry_ouverture: Entry = None
-        self.entry_moves: Entry = None
+        self.entry_moves: Text = None
 
     def relative_to_assets(self, path: str) -> Path:
         """Chemin d'accès pour les assets"""
@@ -85,6 +191,10 @@ class Interface:
                 entry.delete(0, "end")
             elif isinstance(entry, Text):
                 entry.delete("1.0", "end")
+
+    def initialize_chess_game(self):
+        popup = Popup('Visionneur de partie', '700x700', self.window)
+        ChessGUI(popup.create_popup(), self.entry_moves.get('1.0', 'end'))
 
     def display_info_games(self, game_info=None):
         """Prend les informations d'une partie dans la database et les sets dans les entries"""
@@ -148,7 +258,7 @@ class Interface:
         # Button "Moves"
         button_image_3 = PhotoImage(file=self.relative_to_assets("button_3.png"))
         button_3 = Button(image=button_image_3, borderwidth=0, highlightthickness=0,
-                          command=lambda: print("button_3 clicked"),
+                          command= self.initialize_chess_game,
                           relief="flat")
         button_3.place(x=934.0, y=673.0, width=54.0, height=58.0)
 
