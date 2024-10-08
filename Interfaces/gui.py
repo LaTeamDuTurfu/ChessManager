@@ -33,7 +33,7 @@ class Interface:
         self.entry_durée_partie: Entry = None
         self.entry_résultat: Entry = None
         self.entry_ouverture: Entry = None
-        self.entry_moves: Entry = None
+        self.entry_moves: Text = None
 
     def relative_to_assets(self, path: str) -> Path:
         """Chemin d'accès pour les assets"""
