@@ -203,8 +203,11 @@ class Interface:
                 entry.delete("1.0", "end")
 
     def initialize_chess_game(self):
-        popup = Popup('Visionneur de partie', '700x700', self.window)
-        ChessGUI(popup.create_popup(), self.entry_moves.get('1.0', 'end'))
+        moves = self.entry_moves.get('1.0', 'end')
+        print(f"{moves=}")
+        if len(moves.strip()) > 0:
+            popup = Popup('Visionneur de partie', '700x700', self.window)
+            ChessGUI(popup.create_popup(), moves)
 
     def display_info_games(self, game_info=None):
         """Prend les informations d'une partie dans la database et les sets dans les entries"""
