@@ -13,19 +13,20 @@ import chess.pgn
 from PIL import Image, ImageTk
 import io
 
-class Popup():
 
+class Popup:
     def __init__(self, title, geometry, root):
         self.title = title
         self.geometry = geometry
         self.root = root
 
     def create_popup(self):
-        popup = Toplevel(self.root) # permet de lier la popup à une fenêtre parent
+        popup = Toplevel(self.root)  # permet de lier la popup à une fenêtre parent
         popup.title(self.title)
         popup.geometry(self.geometry)
 
         return popup
+
 
 class ChessGUI:
     BOARD_SIZE = 600
@@ -57,7 +58,7 @@ class ChessGUI:
         next_button.grid(row=0, column=1)
 
         self.draw_board()
-
+        self.load_pgn()
 
     def load_piece_images(self):
         pieces = {}
@@ -75,7 +76,7 @@ class ChessGUI:
 
         return pieces
 
-    def draw_board(self): # Fait par ChatGPT
+    def draw_board(self):  # Fait par ChatGPT
         self.canvas.delete("all")
         colors = [ChessGUI.WHITE, ChessGUI.BLACK]
         for row in range(8):
@@ -95,12 +96,21 @@ class ChessGUI:
                 piece_image = self.piece_images[piece.symbol()]
                 self.canvas.create_image(x, y, anchor='nw', image=piece_image)
 
-    def load_pgn(self): # Fait par ChatGPT
+    def load_pgn(self):
+        # Create a PGN stream from the moves
         pgn_stream = io.StringIO(self.moves)
+
+        # Read the game using python-chess's PGN parser
         game = chess.pgn.read_game(pgn_stream)
-        self.board = game.board()
+
+        # Start with an empty board
+        self.board = chess.Board()
+
+        # Collect all moves from the game and reset the move counter
         self.moves = list(game.mainline_moves())
         self.current_move = -1
+
+        # Redraw the board
         self.draw_board()
 
     def next_move(self):
@@ -258,7 +268,7 @@ class Interface:
         # Button "Moves"
         button_image_3 = PhotoImage(file=self.relative_to_assets("button_3.png"))
         button_3 = Button(image=button_image_3, borderwidth=0, highlightthickness=0,
-                          command= self.initialize_chess_game,
+                          command=self.initialize_chess_game,
                           relief="flat")
         button_3.place(x=934.0, y=673.0, width=54.0, height=58.0)
 
