@@ -21,7 +21,7 @@ class Interface:
         self.database = database
         self.window.title('Chess Manager')
 
-        # Entrys (déclaration pour que python ne chiale pas)
+        # Entries (déclaration pour que python ne chiale pas)
         self.entry_player_blanc: Entry = None
         self.entry_player_noir: Entry = None
         self.entry_jours: Entry = None
@@ -42,6 +42,11 @@ class Interface:
     def delete_selection(self):
         """ Delete la partie sélectionnée dans la database et la ListBox"""
         if self.listbox.selected is not None:
+            # Clear le texte qui était dans les entries
+            self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                                self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                                self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+
             index = self.listbox.curselection()
 
             # Update la Listbox
@@ -53,16 +58,16 @@ class Interface:
     def deselect_selection(self):
         """Désélectionne la partie couramment sélectionnée"""
         if self.listbox.selected is not None:
-            # Clear le texte qui était dans les entry
-            self.clear_entrys([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
-                               self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                               self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
-            
+            # Clear le texte qui était dans les entries
+            self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                                self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                                self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+
             index = self.listbox.curselection()
             self.listbox.deselect(index)
 
     def load_database_listbox(self):
-        """ Ajoute les parties dans la listbox au démarrage"""
+        """ Ajoute les parties de la database vers la listbox au démarrage"""
         for game in self.database.parties:
             self.listbox.insert("end", game)
 
@@ -73,20 +78,20 @@ class Interface:
             entry_text.set(entry_text.get()[:max_value])
 
     @staticmethod
-    def clear_entrys(entrys_list: list):
-        """Efface les contenus des entrys"""
-        for entry in entrys_list:
+    def clear_entries(entry_list: list):
+        """Efface les contenus des entry"""
+        for entry in entry_list:
             if isinstance(entry, Entry):
                 entry.delete(0, "end")
             elif isinstance(entry, Text):
                 entry.delete("1.0", "end")
 
     def display_info_games(self, game_info=None):
-        """Prend les informations d'une partie et les sets dans les entry"""
-        # Clear le texte qui était dans les entry
-        self.clear_entrys([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
-                           self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                           self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+        """Prend les informations d'une partie dans la database et les sets dans les entries"""
+        # Clear le texte qui était dans les entries
+        self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                            self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                            self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
 
         # Va get l'index sélectionné
         index = self.listbox.curselection()
@@ -94,7 +99,7 @@ class Interface:
         # Trouve la partie dans la database
         selected_game: Partie = self.database.parties[index]
 
-        # Fill les entry avec les game infos
+        # Fill les entries avec les game infos
         self.entry_player_blanc.insert(0, selected_game.joueur1.nom)
         self.entry_player_noir.insert(0, selected_game.joueur2.nom)
         self.entry_jours.insert(0, selected_game.date[0])
