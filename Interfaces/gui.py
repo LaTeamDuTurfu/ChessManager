@@ -53,6 +53,11 @@ class Interface:
     def deselect_selection(self):
         """Désélectionne la partie couramment sélectionnée"""
         if self.listbox.selected is not None:
+            # Clear le texte qui était dans les entry
+            self.clear_entrys([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                               self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                               self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+            
             index = self.listbox.curselection()
             self.listbox.deselect(index)
 
