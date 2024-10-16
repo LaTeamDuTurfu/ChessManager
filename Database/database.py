@@ -45,19 +45,22 @@ class Database:
         print('Les parties ont été téléchargées avec succès. ✅')
 
     def save_partie(self, filename, game: Partie):
-        file_path = os.path.join(self.folder_path, filename)
+        file_path = os.path.join(self.folder_path, f"{filename}.pgn")
 
         with open(file_path, 'a') as f:
-            f.write(f'["{game.joueur1.nom}", {game.joueur1.elo}]')
-            f.write(f'["{game.joueur2.nom}", {game.joueur2.elo}]')
-            f.write(f'"{game.date[0]}-{game.date[1]}-{game.date[2]}"')
-            f.write(f'["{game.type_partie}"]')
-            f.write(f'["{game.durée}"]')
-            f.write(f'["{game.résultat}"]')
-            f.write(f'["{game.ouverture}"]')
+            f.write(f'["{game.joueur1.nom}", {game.joueur1.elo}]\n')
+            f.write(f'["{game.joueur2.nom}", {game.joueur2.elo}]\n')
+            f.write(f'"{game.date[0]}-{game.date[1]}-{game.date[2]}"\n')
+            f.write(f'["{game.type_partie}"]\n')
+            f.write(f'["{game.durée}"]\n')
+            f.write(f'["{game.résultat}"]\n')
+            f.write(f'["{game.ouverture}"]\n')
             f.write(game.moves)
 
         print(f'Le fichier {filename} a été sauvegardé dans {self.folder_path}')
+
+    def delete_file(self, filename):
+        os.remove(f"{self.folder_path}/{filename}.pgn")
 
     @staticmethod
     def strip_brackets_quotes(string):

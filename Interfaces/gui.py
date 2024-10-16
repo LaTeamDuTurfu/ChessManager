@@ -7,7 +7,7 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar, Toplevel, Frame
 from CTkListbox import *
-from Models import Partie
+from Models import *
 import chess
 import chess.pgn
 from PIL import Image, ImageTk
@@ -156,7 +156,7 @@ class Interface:
         return self.ASSETS_PATH / Path(path)
 
     def delete_selection(self):
-        """ Delete la partie sélectionnée dans la database et la ListBox"""
+        """ Delete la partie sélectionnée dans la database, la ListBox et le fichier correspondant"""
         if self.listbox.selected is not None:
             # Clear le texte qui était dans les entries
             self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
@@ -167,6 +167,9 @@ class Interface:
 
             # Update la Listbox
             self.listbox.delete(index)
+
+            # Delete le fichier correspondant à la game
+            self.database.delete_file(self.database.parties[index].__str__())
 
             # Update la database
             self.database.parties.pop(index)
@@ -184,6 +187,8 @@ class Interface:
 
     def load_database_listbox(self):
         """ Ajoute les parties de la database vers la listbox au démarrage"""
+
+        # Update avec les éléments encore dans la liste
         for game in self.database.parties:
             self.listbox.insert("end", game)
 
@@ -235,6 +240,36 @@ class Interface:
         self.entry_ouverture.insert(0, selected_game.ouverture)
         self.entry_moves.insert("1.0", selected_game.moves)
 
+    def add_game_database(self):
+        # Instancie la game à ajouter
+        new_game = Partie(
+            joueur1=Joueur(self.entry_player_blanc.get(), self.entry_elo_blanc.get()),
+            joueur2=Joueur(self.entry_player_noir.get(), self.entry_elo_noir.get()),
+            date=[self.entry_jours.get(), self.entry_mois.get(), self.entry_années.get()],
+            type_partie=self.entry_type_partie.get(),
+            durée=self.entry_durée_partie.get(),
+            résultat=self.entry_résultat.get(),
+            ouverture=self.entry_ouverture.get(),
+            moves=self.entry_moves.get('1.0', 'end')
+        )
+
+        # Crée le fichier .pgn de la game
+        self.database.save_partie(filename=new_game.__str__(), game=new_game)
+
+        # Update la database
+        self.database.parties.append(new_game)
+
+        # Delete tout les éléments de la liste actuelle
+        self.listbox.delete("all")
+
+        # Update la listbox
+        self.load_database_listbox()
+
+        # Clear le texte qui était dans les entries
+        self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                            self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                            self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+
     def run_main_window(self):
         """Lance la mainloop de l'interface/Catalogue"""
         self.window.geometry("1024x768")
@@ -257,7 +292,7 @@ class Interface:
         # Button "Add"
         button_image_1 = PhotoImage(file=self.relative_to_assets("button_1.png"))
         button_1 = Button(image=button_image_1, borderwidth=0, highlightthickness=0,
-                          command=lambda: print("button_1 clicked"), relief="flat")
+                          command=self.add_game_database, relief="flat")
         button_1.place(x=435.0, y=673.0, width=220.0, height=58.0)
 
         # Button "Save"
