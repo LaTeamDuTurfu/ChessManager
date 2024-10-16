@@ -260,7 +260,7 @@ class Interface:
         self.database.parties.append(new_game)
 
         # Delete tout les éléments de la liste actuelle
-        self.listbox.delete("all")
+        self.listbox.delete(0, "end")
 
         # Update la listbox
         self.load_database_listbox()
@@ -298,7 +298,7 @@ class Interface:
         self.database.save_partie(filename=changed_game.__str__(), game=changed_game)
 
         # Delete tout les éléments de la liste actuelle
-        self.listbox.delete("all")
+        self.listbox.delete(0, "end")
 
         # Update la listbox
         self.load_database_listbox()
@@ -323,7 +323,7 @@ class Interface:
         self.listbox = CTkListbox(self.window, command=self.display_info_games, width=283, bg_color="#778DA9",
                                   button_color="#778DA9",
                                   fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B",
-                                  label_font=self.custom_font)
+                                  label_font=self.custom_font, justify="left")
         self.load_database_listbox()
         self.listbox.place(x=32, y=26)
 
