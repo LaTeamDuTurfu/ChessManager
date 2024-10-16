@@ -97,6 +97,18 @@ class Interface:
         return False
 
     @staticmethod
+    def check_isdigit(entry_text:StringVar):
+        nouvel_input = entry_text.get()
+        if not nouvel_input.isdigit():
+            entry_text.set(''.join(filter(str.isdigit, nouvel_input)))
+
+    @staticmethod
+    def check_isalpha(entry_text: StringVar):
+        nouvel_input = entry_text.get()
+        if not nouvel_input.isalpha():
+            entry_text.set(''.join(filter(str.isalpha, nouvel_input)))
+
+    @staticmethod
     def clear_entries(entry_list: list):
         """Efface les contenus des entry"""
         for entry in entry_list:
@@ -248,8 +260,9 @@ class Interface:
         # Entry jours (JJ)
         entry_image_3 = PhotoImage(file=self.relative_to_assets("entry_3.png"))
         entry_bg_3 = canvas.create_image(779.0, 149.0, image=entry_image_3)
-        entry_3_text = StringVar()  # the text in  your entry
+        entry_3_text = StringVar()
         entry_3_text.trace("w", lambda *args: self.check_character_limit(entry_3_text, 2))
+        entry_3_text.trace_add("write", lambda *args: self.check_isdigit(entry_3_text))
         self.entry_jours = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
                                  textvariable=entry_3_text)
         self.entry_jours.place(x=754.0, y=131.0, width=50.0, height=34.0)
@@ -259,6 +272,7 @@ class Interface:
         entry_bg_4 = canvas.create_image(861.0, 149.0, image=entry_image_4)
         entry_4_text = StringVar()
         entry_4_text.trace("w", lambda *args: self.check_character_limit(entry_4_text, 2))
+        entry_4_text.trace_add("write", lambda *args: self.check_isdigit(entry_4_text))
         self.entry_mois = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
                                 textvariable=entry_4_text)
         self.entry_mois.place(x=836.0, y=131.0, width=50.0, height=34.0)
@@ -268,6 +282,7 @@ class Interface:
         entry_bg_5 = canvas.create_image(957.0, 149.0, image=entry_image_5)
         entry_5_text = StringVar()
         entry_5_text.trace("w", lambda *args: self.check_character_limit(entry_5_text, 4))
+        entry_5_text.trace_add("write", lambda *args: self.check_isdigit(entry_5_text))
         self.entry_années = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
                                   textvariable=entry_5_text)
         self.entry_années.place(x=917.0, y=131.0, width=80.0, height=34.0)
@@ -275,25 +290,40 @@ class Interface:
         # Entry "Niveau Elo (White)"
         entry_image_6 = PhotoImage(file=self.relative_to_assets("entry_6.png"))
         entry_bg_6 = canvas.create_image(814.0, 239.0, image=entry_image_6)
-        self.entry_elo_blanc = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        entry_6_text = StringVar()
+        entry_6_text.trace("w", lambda *args: self.check_character_limit(entry_6_text, 4))
+        entry_6_text.trace_add("write", lambda *args: self.check_isdigit(entry_6_text))
+        self.entry_elo_blanc = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
+                                     textvariable=entry_6_text)
         self.entry_elo_blanc.place(x=754.0, y=221.0, width=120.0, height=34.0)
 
         # Entry "Niveau Elo (Black)"
         entry_image_7 = PhotoImage(file=self.relative_to_assets("entry_7.png"))
         entry_bg_7 = canvas.create_image(937.0, 239.0, image=entry_image_7)
-        self.entry_elo_noir = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        entry_7_text = StringVar()
+        entry_7_text.trace("w", lambda *args: self.check_character_limit(entry_7_text, 4))
+        entry_7_text.trace_add("write", lambda *args: self.check_isdigit(entry_7_text))
+        self.entry_elo_noir = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
+                                    textvariable=entry_7_text)
         self.entry_elo_noir.place(x=877.0, y=221.0, width=120.0, height=34.0)
 
         # Entry Type de Partie
         entry_image_8 = PhotoImage(file=self.relative_to_assets("entry_8.png"))
         entry_bg_8 = canvas.create_image(875.5, 300.0, image=entry_image_8)
-        self.entry_type_partie = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        entry_8_text = StringVar()
+        entry_8_text.trace_add("write", lambda *args: self.check_isalpha(entry_8_text))
+        self.entry_type_partie = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
+                                       textvariable=entry_8_text)
         self.entry_type_partie.place(x=754.0, y=282.0, width=243.0, height=34.0)
 
         # Entry durée de la partie
         entry_image_9 = PhotoImage(file=self.relative_to_assets("entry_9.png"))
         entry_bg_9 = canvas.create_image(819.0, 361.0, image=entry_image_9)
-        self.entry_durée_partie = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        entry_9_text = StringVar()
+        entry_9_text.trace("w", lambda *args: self.check_character_limit(entry_9_text, 4))
+        entry_9_text.trace_add("write", lambda *args: self.check_isdigit(entry_9_text))
+        self.entry_durée_partie = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0,
+                                        font=self.custom_font, textvariable=entry_9_text)
         self.entry_durée_partie.place(x=754.0, y=343.0, width=130.0, height=34.0)
 
         # Entry résultat
@@ -301,6 +331,7 @@ class Interface:
         entry_bg_10 = canvas.create_image(794.0, 422.0, image=entry_image_10)
         entry_10_text = StringVar()
         entry_10_text.trace("w", lambda *args: self.check_character_limit(entry_10_text, 1))
+        entry_10_text.trace_add("write", lambda *args: self.check_isalpha(entry_10_text))
         self.entry_résultat = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
                                     textvariable=entry_10_text)
         self.entry_résultat.place(x=754.0, y=404.0, width=80.0, height=34.0)
@@ -308,7 +339,10 @@ class Interface:
         # Entry ouverture
         entry_image_11 = PhotoImage(file=self.relative_to_assets("entry_11.png"))
         entry_bg_11 = canvas.create_image(875.5, 483.0, image=entry_image_11)
-        self.entry_ouverture = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font)
+        entry_11_text = StringVar()
+        entry_11_text.trace("w", lambda *args: self.check_isalpha(entry_11_text))
+        self.entry_ouverture = Entry(bd=0, bg="#415A77", fg="#000716", highlightthickness=0, font=self.custom_font,
+                                     textvariable=entry_11_text)
         self.entry_ouverture.place(x=754.0, y=465.0, width=243.0, height=34.0)
 
         # Entry moves
@@ -397,7 +431,7 @@ class Interface:
 
         self.window.resizable(False, False)
         self.window.mainloop()
-        
+
     def save_changes_game(self):
         """Modifie la partie qui est couramment sélectionnée avec le contenu des entries, puis applique les
         changement dans la database et change le fichier .pgn qui lui était associée"""
