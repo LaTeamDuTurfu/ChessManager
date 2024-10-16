@@ -240,7 +240,7 @@ class Interface:
         self.entry_ouverture.insert(0, selected_game.ouverture)
         self.entry_moves.insert("1.0", selected_game.moves)
 
-    def add_game_database(self):
+    def add_game(self):
         # Instancie la game à ajouter
         new_game = Partie(
             joueur1=Joueur(self.entry_player_blanc.get(), self.entry_elo_blanc.get()),
@@ -258,6 +258,44 @@ class Interface:
 
         # Update la database
         self.database.parties.append(new_game)
+
+        # Delete tout les éléments de la liste actuelle
+        self.listbox.delete("all")
+
+        # Update la listbox
+        self.load_database_listbox()
+
+        # Clear le texte qui était dans les entries
+        self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                            self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                            self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+
+    def save_changes_game(self):
+        index = self.listbox.curselection()
+
+        # Instancie la game à remplacer
+        changed_game = Partie(
+            joueur1=Joueur(self.entry_player_blanc.get(), self.entry_elo_blanc.get()),
+            joueur2=Joueur(self.entry_player_noir.get(), self.entry_elo_noir.get()),
+            date=[self.entry_jours.get(), self.entry_mois.get(), self.entry_années.get()],
+            type_partie=self.entry_type_partie.get(),
+            durée=self.entry_durée_partie.get(),
+            résultat=self.entry_résultat.get(),
+            ouverture=self.entry_ouverture.get(),
+            moves=self.entry_moves.get('1.0', 'end')
+        )
+
+        # Delete l'ancien fichier de la partie
+        self.database.delete_file(self.database.parties[index].__str__())
+
+        # Enlève l'ancienne game à la database
+        self.database.parties.pop(index)
+
+        # Remplace l'ancienne game aux même index
+        self.database.parties.insert(index, changed_game)
+
+        # Crée le fichier .pgn de la game
+        self.database.save_partie(filename=changed_game.__str__(), game=changed_game)
 
         # Delete tout les éléments de la liste actuelle
         self.listbox.delete("all")
@@ -292,13 +330,13 @@ class Interface:
         # Button "Add"
         button_image_1 = PhotoImage(file=self.relative_to_assets("button_1.png"))
         button_1 = Button(image=button_image_1, borderwidth=0, highlightthickness=0,
-                          command=self.add_game_database, relief="flat")
+                          command=self.add_game, relief="flat")
         button_1.place(x=435.0, y=673.0, width=220.0, height=58.0)
 
         # Button "Save"
         button_image_2 = PhotoImage(file=self.relative_to_assets("button_2.png"))
         button_2 = Button(image=button_image_2, borderwidth=0, highlightthickness=0,
-                          command=lambda: print("button_2 clicked"),
+                          command=self.save_changes_game,
                           relief="flat")
         button_2.place(x=676.923095703125, y=673.0, width=218.076904296875, height=58.0)
 
