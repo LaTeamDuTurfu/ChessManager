@@ -3,7 +3,7 @@
 # https://github.com/ParthJadhav/Tkinter-Designer
 
 from pathlib import Path
-from tkinter import Tk, Entry, Text, PhotoImage, StringVar
+from tkinter import Tk, Entry, Text, PhotoImage, StringVar, messagebox
 
 from CTkListbox import *
 from Models import *
@@ -83,6 +83,21 @@ class Interface:
         if len(entry_text.get()) > 0:
             entry_text.set(entry_text.get()[:max_value])
 
+    def check_empty_entries(self):
+        """Regarde si toutes les entries sont remplies
+        --> return True s'il y a des entries vides
+        --> return False s'il n'y a pas entry vide"""
+
+        all_entries = [self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                       self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                       self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves]
+
+        for entry in all_entries:
+            if isinstance(entry, Entry) and entry.get() == "" or isinstance(entry, Text) and entry.get("1.0",
+                                                                                                       "end") == "":
+                return True
+        return False
+
     @staticmethod
     def clear_entries(entry_list: list):
         """Efface les contenus des entry"""
@@ -92,7 +107,7 @@ class Interface:
             elif isinstance(entry, Text):
                 entry.delete("1.0", "end")
 
-    def initialize_chess_game(self):
+    def initialize_chess_gui(self):
         """Get les moves dans self.entry_moves et initialise un Pop-up avec ces informations."""
 
         moves = self.entry_moves.get('1.0', 'end')
@@ -132,6 +147,12 @@ class Interface:
         """Utilise le contenu des entries pour ajouter une partie à la database et crée un fichier en format .png
         avec les informations fournies"""
 
+        # Vérifie si les entries sont toutes pleines
+        if self.check_empty_entries():
+            messagebox.showwarning("Entrée(s) Vide(s)", "Une ou plusieurs entrées sont vides, remplissez-les puis "
+                                                        "réessayez ensuite.")
+            return
+
         # Instancie la game à ajouter
         new_game = Partie(
             joueur1=Joueur(self.entry_player_blanc.get(), self.entry_elo_blanc.get()),
@@ -165,6 +186,12 @@ class Interface:
         """Modifie la partie qui est couramment sélectionnée avec le contenu des entries, puis applique les
         changement dans la database et change le fichier .pgn qui lui était associée"""
 
+        # Vérifie si les entries sont toutes pleines
+        if self.check_empty_entries():
+            messagebox.showwarning("Entrée(s) Vide(s)", "Une ou plusieurs entrées sont vides, remplissez-les puis "
+                                                        "réessayez ensuite.")
+            return
+        
         index = self.listbox.curselection()
 
         # Instancie la game à remplacer
@@ -237,7 +264,7 @@ class Interface:
         # Button "Moves"
         button_image_3 = PhotoImage(file=self.relative_to_assets("button_3.png"))
         button_3 = Button(image=button_image_3, borderwidth=0, highlightthickness=0,
-                          command=self.initialize_chess_game,
+                          command=self.initialize_chess_gui,
                           relief="flat")
         button_3.place(x=934.0, y=673.0, width=54.0, height=58.0)
 
