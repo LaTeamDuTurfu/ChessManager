@@ -36,113 +36,6 @@ class Interface:
         self.entry_ouverture: Entry = None
         self.entry_moves: Text = None
 
-    def relative_to_assets(self, path: str) -> Path:
-        """Chemin d'accès pour les assets"""
-        return self.ASSETS_PATH / Path(path)
-
-    def delete_selection(self):
-        """ Delete la partie sélectionnée dans la database, la ListBox et le fichier correspondant"""
-        if self.listbox.selected is not None:
-            # Clear le texte qui était dans les entries
-            self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
-                                self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                                self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
-
-            index = self.listbox.curselection()
-
-            # Update la Listbox
-            self.listbox.delete(index)
-
-            # Delete le fichier correspondant à la game
-            self.database.delete_file(self.database.parties[index].__str__())
-
-            # Update la database
-            self.database.parties.pop(index)
-
-    def deselect_selection(self):
-        """Désélectionne la partie couramment sélectionnée"""
-        if self.listbox.selected is not None:
-            # Clear le texte qui était dans les entries
-            self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
-                                self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                                self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
-
-            index = self.listbox.curselection()
-            self.listbox.deselect(index)
-
-    def load_database_listbox(self):
-        """ Ajoute les parties de la database vers la listbox au démarrage"""
-
-        # Update avec les éléments encore dans la liste
-        for game in self.database.parties:
-            self.listbox.insert("end", game)
-
-    @staticmethod
-    def check_character_limit(entry_text: StringVar, max_value: int):
-        """S'assure qu'une entry ne dépasse un certain nombre de characters"""
-        if len(entry_text.get()) > 0:
-            entry_text.set(entry_text.get()[:max_value])
-
-    def check_empty_entries(self):
-        """Regarde si toutes les entries sont remplies
-        --> return True s'il y a des entries vides
-        --> return False s'il n'y a pas entry vide"""
-
-        all_entries = [self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
-                       self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                       self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves]
-
-        for entry in all_entries:
-            if isinstance(entry, Entry) and entry.get() == "" or isinstance(entry, Text) and entry.get("1.0",
-                                                                                                       "end") == "":
-                return True
-        return False
-
-    @staticmethod
-    def clear_entries(entry_list: list):
-        """Efface les contenus des entry"""
-        for entry in entry_list:
-            if isinstance(entry, Entry):
-                entry.delete(0, "end")
-            elif isinstance(entry, Text):
-                entry.delete("1.0", "end")
-
-    def initialize_chess_gui(self):
-        """Get les moves dans self.entry_moves et initialise un Pop-up avec ces informations."""
-
-        moves = self.entry_moves.get('1.0', 'end')
-        if len(moves.strip()) > 0:
-            popup = Popup('Visionneur de partie', '700x700', self.window)
-            ChessGUI(popup.create_popup(), moves)
-
-    def display_info_games(self, game_info=None):
-        """Prend les informations d'une partie dans la database et les sets dans les entries"""
-
-        # Clear le texte qui était dans les entries
-        self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
-                            self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                            self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
-
-        # Va get l'index sélectionné
-        index = self.listbox.curselection()
-
-        # Trouve la partie dans la database
-        selected_game: Partie = self.database.parties[index]
-
-        # Fill les entries avec les game infos
-        self.entry_player_blanc.insert(0, selected_game.joueur1.nom)
-        self.entry_player_noir.insert(0, selected_game.joueur2.nom)
-        self.entry_jours.insert(0, selected_game.date[0])
-        self.entry_mois.insert(0, selected_game.date[1])
-        self.entry_années.insert(0, selected_game.date[2])
-        self.entry_elo_blanc.insert(0, selected_game.joueur1.elo)
-        self.entry_elo_noir.insert(0, selected_game.joueur2.elo)
-        self.entry_type_partie.insert(0, selected_game.type_partie)
-        self.entry_durée_partie.insert(0, selected_game.durée)
-        self.entry_résultat.insert(0, selected_game.résultat)
-        self.entry_ouverture.insert(0, selected_game.ouverture)
-        self.entry_moves.insert("1.0", selected_game.moves)
-
     def add_game(self):
         """Utilise le contenu des entries pour ajouter une partie à la database et crée un fichier en format .png
         avec les informations fournies"""
@@ -182,52 +75,112 @@ class Interface:
                             self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
                             self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
 
-    def save_changes_game(self):
-        """Modifie la partie qui est couramment sélectionnée avec le contenu des entries, puis applique les
-        changement dans la database et change le fichier .pgn qui lui était associée"""
+    @staticmethod
+    def check_character_limit(entry_text: StringVar, max_value: int):
+        """S'assure qu'une entry ne dépasse un certain nombre de characters"""
+        if len(entry_text.get()) > 0:
+            entry_text.set(entry_text.get()[:max_value])
 
-        # Vérifie si les entries sont toutes pleines
-        if self.check_empty_entries():
-            messagebox.showwarning("Entrée(s) Vide(s)", "Une ou plusieurs entrées sont vides, remplissez-les puis "
-                                                        "réessayez ensuite.")
-            return
-        
-        index = self.listbox.curselection()
+    def check_empty_entries(self):
+        """Regarde si toutes les entries sont remplies
+        --> return True s'il y a des entries vides
+        --> return False s'il n'y a pas entry vide"""
 
-        # Instancie la game à remplacer
-        changed_game = Partie(
-            joueur1=Joueur(self.entry_player_blanc.get(), self.entry_elo_blanc.get()),
-            joueur2=Joueur(self.entry_player_noir.get(), self.entry_elo_noir.get()),
-            date=[self.entry_jours.get(), self.entry_mois.get(), self.entry_années.get()],
-            type_partie=self.entry_type_partie.get(),
-            durée=self.entry_durée_partie.get(),
-            résultat=self.entry_résultat.get(),
-            ouverture=self.entry_ouverture.get(),
-            moves=self.entry_moves.get('1.0', 'end')
-        )
+        all_entries = [self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                       self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                       self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves]
 
-        # Delete l'ancien fichier de la partie
-        self.database.delete_file(self.database.parties[index].__str__())
+        for entry in all_entries:
+            if isinstance(entry, Entry) and entry.get() == "" or isinstance(entry, Text) and entry.get("1.0",
+                                                                                                       "end") == "":
+                return True
+        return False
 
-        # Enlève l'ancienne game à la database
-        self.database.parties.pop(index)
+    @staticmethod
+    def clear_entries(entry_list: list):
+        """Efface les contenus des entry"""
+        for entry in entry_list:
+            if isinstance(entry, Entry):
+                entry.delete(0, "end")
+            elif isinstance(entry, Text):
+                entry.delete("1.0", "end")
 
-        # Insert la nouvelle game à la place de l'ancienne
-        self.database.parties.insert(index, changed_game)
+    def delete_selection(self):
+        """ Delete la partie sélectionnée dans la database, la ListBox et le fichier correspondant"""
+        if self.listbox.selected is not None:
+            # Clear le texte qui était dans les entries
+            self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                                self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                                self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
 
-        # Crée le fichier .pgn de la game avec les changements
-        self.database.save_partie(filename=changed_game.__str__(), game=changed_game)
+            index = self.listbox.curselection()
 
-        # Delete tous les éléments de la liste actuelle
-        self.listbox.delete(0, "end")
+            # Update la Listbox
+            self.listbox.delete(index)
 
-        # Update la listbox avec la nouvelle database
-        self.load_database_listbox()
+            # Delete le fichier correspondant à la game
+            self.database.delete_file(self.database.parties[index].__str__())
+
+            # Update la database
+            self.database.parties.pop(index)
+
+    def deselect_selection(self):
+        """Désélectionne la partie couramment sélectionnée"""
+        if self.listbox.selected is not None:
+            # Clear le texte qui était dans les entries
+            self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                                self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                                self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+
+            index = self.listbox.curselection()
+            self.listbox.deselect(index)
+
+    def display_info_games(self, game_info=None):
+        """Prend les informations d'une partie dans la database et les sets dans les entries"""
 
         # Clear le texte qui était dans les entries
         self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
                             self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
                             self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+
+        # Va get l'index sélectionné
+        index = self.listbox.curselection()
+
+        # Trouve la partie dans la database
+        selected_game: Partie = self.database.parties[index]
+
+        # Fill les entries avec les game infos
+        self.entry_player_blanc.insert(0, selected_game.joueur1.nom)
+        self.entry_player_noir.insert(0, selected_game.joueur2.nom)
+        self.entry_jours.insert(0, selected_game.date[0])
+        self.entry_mois.insert(0, selected_game.date[1])
+        self.entry_années.insert(0, selected_game.date[2])
+        self.entry_elo_blanc.insert(0, selected_game.joueur1.elo)
+        self.entry_elo_noir.insert(0, selected_game.joueur2.elo)
+        self.entry_type_partie.insert(0, selected_game.type_partie)
+        self.entry_durée_partie.insert(0, selected_game.durée)
+        self.entry_résultat.insert(0, selected_game.résultat)
+        self.entry_ouverture.insert(0, selected_game.ouverture)
+        self.entry_moves.insert("1.0", selected_game.moves)
+
+    def initialize_chess_gui(self):
+        """Get les moves dans self.entry_moves et initialise un Pop-up avec ces informations."""
+
+        moves = self.entry_moves.get('1.0', 'end')
+        if len(moves.strip()) > 0:
+            popup = Popup('Visionneur de partie', '700x700', self.window)
+            ChessGUI(popup.create_popup(), moves)
+
+    def load_database_listbox(self):
+        """ Ajoute les parties de la database vers la listbox au démarrage"""
+
+        # Update avec les éléments encore dans la liste
+        for game in self.database.parties:
+            self.listbox.insert("end", game)
+
+    def relative_to_assets(self, path: str) -> Path:
+        """Chemin d'accès pour les assets"""
+        return self.ASSETS_PATH / Path(path)
 
     def run_main_interface(self):
         """Lance la mainloop de l'interface/Catalogue"""
@@ -444,3 +397,51 @@ class Interface:
 
         self.window.resizable(False, False)
         self.window.mainloop()
+        
+    def save_changes_game(self):
+        """Modifie la partie qui est couramment sélectionnée avec le contenu des entries, puis applique les
+        changement dans la database et change le fichier .pgn qui lui était associée"""
+
+        # Vérifie si les entries sont toutes pleines
+        if self.check_empty_entries():
+            messagebox.showwarning("Entrée(s) Vide(s)", "Une ou plusieurs entrées sont vides, remplissez-les puis "
+                                                        "réessayez ensuite.")
+            return
+
+        index = self.listbox.curselection()
+
+        # Instancie la game à remplacer
+        changed_game = Partie(
+            joueur1=Joueur(self.entry_player_blanc.get(), self.entry_elo_blanc.get()),
+            joueur2=Joueur(self.entry_player_noir.get(), self.entry_elo_noir.get()),
+            date=[self.entry_jours.get(), self.entry_mois.get(), self.entry_années.get()],
+            type_partie=self.entry_type_partie.get(),
+            durée=self.entry_durée_partie.get(),
+            résultat=self.entry_résultat.get(),
+            ouverture=self.entry_ouverture.get(),
+            moves=self.entry_moves.get('1.0', 'end')
+        )
+
+        # Delete l'ancien fichier de la partie
+        self.database.delete_file(self.database.parties[index].__str__())
+
+        # Enlève l'ancienne game à la database
+        self.database.parties.pop(index)
+
+        # Insert la nouvelle game à la place de l'ancienne
+        self.database.parties.insert(index, changed_game)
+
+        # Crée le fichier .pgn de la game avec les changements
+        self.database.save_partie(filename=changed_game.__str__(), game=changed_game)
+
+        # Delete tous les éléments de la liste actuelle
+        self.listbox.delete(0, "end")
+
+        # Update la listbox avec la nouvelle database
+        self.load_database_listbox()
+
+        # Clear le texte qui était dans les entries
+        self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                            self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                            self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
+
