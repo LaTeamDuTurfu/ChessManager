@@ -42,21 +42,6 @@ class Interface:
         if len(entry_text.get()) > 0:
             entry_text.set(entry_text.get()[:max_value])
 
-    def check_empty_entries(self):
-        """Regarde si toutes les entries sont remplies
-        --> return True s'il y a des entries vides
-        --> return False s'il n'y a pas entry vide"""
-
-        all_entries = [self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
-                       self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
-                       self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves]
-
-        for entry in all_entries:
-            if isinstance(entry, Entry) and entry.get() == "" or isinstance(entry, Text) and entry.get("1.0",
-                                                                                                       "end") == "":
-                return True
-        return False
-
     @staticmethod
     def check_valid_date(date: str):
         """Regarde si la date dans un entry est valide sous le format JJ-MM-AAAA
@@ -130,7 +115,22 @@ class Interface:
         self.clear_entries([self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
                             self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
                             self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves])
-        
+
+    def check_empty_entries(self):
+        """Regarde si toutes les entries sont remplies
+        --> return True s'il y a des entries vides
+        --> return False s'il n'y a pas entry vide"""
+
+        all_entries = [self.entry_player_blanc, self.entry_player_noir, self.entry_jours, self.entry_mois,
+                       self.entry_années, self.entry_elo_blanc, self.entry_elo_noir, self.entry_type_partie,
+                       self.entry_durée_partie, self.entry_résultat, self.entry_ouverture, self.entry_moves]
+
+        for entry in all_entries:
+            if isinstance(entry, Entry) and entry.get() == "" or isinstance(entry, Text) and entry.get("1.0",
+                                                                                                       "end") == "":
+                return True
+        return False
+
     def delete_selection(self):
         """ Delete la partie sélectionnée dans la database, la ListBox et le fichier correspondant"""
         if self.listbox.selected is not None:
@@ -220,12 +220,12 @@ class Interface:
         canvas.create_rectangle(375.0, 0.0, 1024.0, 768.0, fill="#778DA9", outline="")
 
         # Listbox management
-        self.listbox = CTkListbox(self.window, command=self.display_info_games, width=283, bg_color="#778DA9",
-                                  button_color="#778DA9",
-                                  fg_color="#778DA9", border_color="#1B263B", height=600, hover_color="#1B263B",
+        self.listbox = CTkListbox(self.window, command=self.display_info_games, width=283, bg_color="#415A77",
+                                  button_color="#778DA9", border_width=5,
+                                  fg_color="#778DA9", border_color="#1B263B", height=550, hover_color="#1B263B",
                                   label_font=self.custom_font, justify="left")
         self.load_database_listbox()
-        self.listbox.place(x=32, y=26)
+        self.listbox.place(x=32, y=70)
 
         # Button "Add"
         button_image_1 = PhotoImage(file=self.relative_to_assets("button_1.png"))
@@ -368,8 +368,9 @@ class Interface:
         canvas.create_rectangle(807.0, 146.0, 829.0, 149.0, fill="#FFFFFF", outline="")
         canvas.create_rectangle(889.0, 146.0, 911.0, 149.0, fill="#FFFFFF", outline="")
 
+        # Image Placeholder
         image_image_1 = PhotoImage(file=self.relative_to_assets("image_1.png"))
-        image_1 = canvas.create_image(187.0, 334.0, image=image_image_1)
+        image_1 = canvas.create_image(187.0, 359.0, image=image_image_1)
 
         # Texte joueur
         image_image_2 = PhotoImage(file=self.relative_to_assets("image_2.png"))
@@ -442,6 +443,9 @@ class Interface:
         # Texte placeholder
         image_image_19 = PhotoImage(file=self.relative_to_assets("image_19.png"))
         image_19 = canvas.create_image(187.0, 319.0, image=image_image_19)
+
+        image_image_20 = PhotoImage(file=self.relative_to_assets("image_20.png"))
+        image_20 = canvas.create_image(187.0, 44.0, image=image_image_20)
 
         self.window.resizable(False, False)
         self.window.mainloop()
